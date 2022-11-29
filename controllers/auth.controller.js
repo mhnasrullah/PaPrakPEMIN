@@ -1,5 +1,8 @@
 const {Mahasiswa} = require("../models");
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const config = require("../config/jwt.config")
+const tokenList = {}
 
 const register = async (req,res) => {
 
@@ -85,12 +88,40 @@ const register = async (req,res) => {
 }
 
 const login = async (req,res) => {
+    const {nama} = req.body;
+    // const key = generateAccessToken(req.body)
+    const token = jwt.sign(req.body, config.secret, { expiresIn: config.tokenLife})
+    const refreshToken = jwt.sign(req.body, config.refreshTokenSecret, { expiresIn: config.refreshTokenLife})
+    const response = {
+        "status": "Logged in",
+        "token": token,
+        "refreshToken": refreshToken,
+    }
+    
+    tokenList[refreshToken] = response
     res.json({
-        message : "login"
+        message : response
     })
+}
+
+const freshToken = async (req,res) => {
+    const {refreshToken, ...data} = req.body
+    console.log(tokenList,"token list")
+    if((refreshToken) && (refreshToken in tokenList)) {
+        const token = jwt.sign({...data}, config.secret, { expiresIn: config.tokenLife})
+        const response = {
+            "token": token,
+        }
+        // update the token in the list
+        tokenList[refreshToken].token = token
+        res.status(200).json(response);        
+    } else {
+        res.status(404).send('Invalid request')
+    }
 }
 
 module.exports = {
     register,
-    login
+    login,
+    freshToken
 }

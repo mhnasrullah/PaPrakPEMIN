@@ -1,11 +1,12 @@
 var express = require('express');
 var router = express.Router();
-const {checkConnection} = require("../utils/funct")
 
 /* GET home page. */
 router.get('/', async function (req, res, next) {
-  checkConnection()
-  res.render('index', { title: 'Express' });
+  // checkConnection()
+  res.json({
+    "key" : require('crypto').randomBytes(64).toString('hex')}
+  )
 });
 
 module.exports = router;
