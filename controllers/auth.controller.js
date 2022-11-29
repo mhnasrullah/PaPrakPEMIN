@@ -88,20 +88,78 @@ const register = async (req,res) => {
 }
 
 const login = async (req,res) => {
-    const {nama} = req.body;
-    // const key = generateAccessToken(req.body)
-    const token = jwt.sign(req.body, config.secret, { expiresIn: config.tokenLife})
-    const refreshToken = jwt.sign(req.body, config.refreshTokenSecret, { expiresIn: config.refreshTokenLife})
-    const response = {
-        "status": "Logged in",
-        "token": token,
-        "refreshToken": refreshToken,
+    const {nim,password} = req.body;
+    let error = [];
+    let user = null;
+
+    // VALIDATION;
+    if(nim){
+        if(nim.length != 15){
+            error = [
+                ...error,
+                "NIM not valid"
+            ]
+        }else{
+            user = await Mahasiswa.findByPk(nim);
+            if(user === null){
+                error = [
+                    ...error,
+                    "Mahasiswa not found"
+                ]
+            }
+        }
+    }else{
+        error = [
+            ...error,
+            "NIM is required"
+        ]
     }
-    
-    tokenList[refreshToken] = response
-    res.json({
-        message : response
-    })
+
+    if(password){
+        if(password.length < 8){
+            error = [
+                ...error,
+                "Password minimum 8 character"
+            ]
+        }
+    }else{
+        error = [
+            ...error,
+            "Password is required"
+        ]
+    }
+
+    // AUTH
+    if(error.length == 0){
+        const{dataValues : {password : hashedPassword}} = user;
+        const result = await bcrypt.compare(password,hashedPassword);
+        
+        if(!result){
+            error = ["NIM or Password is wrong"]
+        }
+    }
+
+
+    if(error.length === 0){
+        const token = jwt.sign(req.body, config.secret, { expiresIn: config.tokenLife})
+        const refreshToken = jwt.sign(req.body, config.refreshTokenSecret, { expiresIn: config.refreshTokenLife})
+        const response = {
+            "status": "Logged in",
+            "token": token,
+            "refreshToken": refreshToken,
+        }
+        
+        tokenList[refreshToken] = response
+        res.json({
+            message : response
+        })
+    }else{
+        res.status(404).json({
+            message : "logged in failed",
+            error : error
+        })
+    }
+
 }
 
 const freshToken = async (req,res) => {
