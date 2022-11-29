@@ -1,7 +1,20 @@
+const {Mahasiswa} = require("../models")
+
 const get = async (req,res) => {
-    res.json({
-        message : "semua mahasiswa"
-    })
+    const attributes = ['nim','nama','angkatan']
+    const data = await Mahasiswa.findAll({attributes});
+
+    if(data.length != 0){
+        res.status(200).json({
+            message : "semua mahasiswa",
+            data
+        })
+    }else{
+        res.status(404).json({
+            message : "data mahasiswa tidak tersedia",
+            data
+        })
+    }
 }
 
 const profile = async (req,res) => {
