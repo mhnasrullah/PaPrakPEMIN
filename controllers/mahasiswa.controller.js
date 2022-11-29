@@ -24,10 +24,21 @@ const profile = async (req,res) => {
 }
 
 const byNim = async (req,res) => {
-    const {nim} = req.params
-    res.json({
-        message : `profile mahasiswa ${nim}`
-    })
+    const {nim} = req.params;
+
+    const data = await Mahasiswa.findByPk(nim);
+
+    if(data === null){
+        res.status(404).json({
+            message : `Mahasiswa ${nim} not found`
+        });
+    }else{
+        const {dataValues : {password, ...dataMahasiswa}} = data;
+        res.status(200).json({
+            message : `Mahasiswa ${nim} found`,
+            data : dataMahasiswa
+        });
+    }
 }
 
 const addMk = async (req,res) => {
