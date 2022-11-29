@@ -6,7 +6,7 @@ const tokenList = {}
 
 const register = async (req,res) => {
 
-    const {nim,nama,password,angkatan} = req.body;
+    const {nim,nama,password,angkatan,prodi} = req.body;
     let error = [];
 
     // VALIDATION;
@@ -36,6 +36,13 @@ const register = async (req,res) => {
         error = [
             ...error,
             "Nama is required"
+        ]
+    }
+
+    if(!prodi){
+        error = [
+            ...error,
+            "Prodi is required"
         ]
     }
 

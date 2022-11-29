@@ -12,6 +12,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      // console.log(models.Mahasiswa,"models associate")
+      models.Mahasiswa.belongsTo(models.Prodi,{foreignKey : 'prodi'})
     }
   }
   Mahasiswa.init({
@@ -21,7 +23,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     nama: DataTypes.STRING,
     angkatan: DataTypes.STRING,
-    password: DataTypes.STRING
+    password: DataTypes.STRING,
+    prodi: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Mahasiswa',

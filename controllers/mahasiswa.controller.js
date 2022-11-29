@@ -1,8 +1,14 @@
-const {Mahasiswa} = require("../models")
+const {Mahasiswa,Prodi} = require("../models")
 
 const get = async (req,res) => {
     const attributes = ['nim','nama','angkatan']
-    const data = await Mahasiswa.findAll({attributes});
+    const data = await Mahasiswa.findAll({
+        attributes,
+        include : {
+            model : Prodi,
+            attributes : ['nama']
+        }
+    });
 
     if(data.length != 0){
         res.status(200).json({

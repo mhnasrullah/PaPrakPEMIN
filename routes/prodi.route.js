@@ -4,5 +4,6 @@ const prodiController = require("../controllers/prodi.controller")
 
 /* GET users listing. */
 router.get('/',prodiController.get);
+router.post('/',prodiController.create);
 
 module.exports = router;

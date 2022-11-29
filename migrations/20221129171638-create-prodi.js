@@ -2,29 +2,15 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Mahasiswas', {
-      nim: {
+    await queryInterface.createTable('Prodis', {
+      id: {
         allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
-        unique : true,
-        defaultValue : "",
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       nama: {
-        allowNull: false,
         type: Sequelize.STRING
-      },
-      angkatan: {
-        allowNull : false,
-        type: Sequelize.INTEGER
-      },
-      password: {
-        allowNull : false,
-        type: Sequelize.STRING
-      },
-      prodi: {
-        allowNull : false,
-        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -37,6 +23,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Mahasiswas');
+    await queryInterface.dropTable('Prodis');
   }
 };
