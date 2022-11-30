@@ -32,7 +32,12 @@ const profile = async (req,res) => {
 const byNim = async (req,res) => {
     const {nim} = req.params;
 
-    const data = await Mahasiswa.findByPk(nim);
+    const data = await Mahasiswa.findByPk(nim,{
+        include : {
+            model : Prodi,
+            attributes : ['nama']
+        }
+    });
 
     if(data === null){
         res.status(404).json({
