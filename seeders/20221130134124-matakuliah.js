@@ -12,7 +12,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    await queryInterface.bulkInsert('matakuliahs', [
+    await queryInterface.bulkInsert('Matakuliahs', [
       {
       nama: 'Pemrograman Dasar',
       createdAt: new Date(),
@@ -48,6 +48,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    await queryInterface.bulkDelete('matakuliahs', null, {});
+    await queryInterface.bulkDelete('Matakuliahs', null, {});
   }
 };

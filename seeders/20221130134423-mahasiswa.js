@@ -12,11 +12,11 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
      */
-    await queryInterface.bulkInsert('mahasiswas', [
+    await queryInterface.bulkInsert('Mahasiswas', [
       {
         nim: '205150700111032',
         nama: 'Mukhammad Afan Oktafianto',
-        angkatan: '2020',
+        angkatan: 2020,
         password: await bcrypt.hash('12345678',10),
         prodi: 1,
         createdAt: new Date(),
@@ -25,7 +25,7 @@ module.exports = {
       {
         nim: '205150700111031',
         nama: 'Okta',
-        angkatan: '2020',
+        angkatan: 2020,
         password: await bcrypt.hash('12345678',10),
         prodi: 1,
         createdAt: new Date(),
@@ -42,6 +42,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    await queryInterface.bulkDelete('mahasiswas', null, {});
+    await queryInterface.bulkDelete('Mahasiswas', null, {});
   }
 };
