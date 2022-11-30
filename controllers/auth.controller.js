@@ -148,8 +148,12 @@ const login = async (req,res) => {
 
 
     if(error.length === 0){
-        const token = jwt.sign(req.body, config.secret, { expiresIn: config.tokenLife})
-        const refreshToken = jwt.sign(req.body, config.refreshTokenSecret, { expiresIn: config.refreshTokenLife})
+        const {dataValues : {password, createdAt, updatedAt , ...userData}} = user;
+        const token = jwt.sign(userData, config.secret, { expiresIn: config.tokenLife});
+        
+        // dataStored {nim,nama,angkatan,prodi}
+
+        const refreshToken = jwt.sign(userData, config.refreshTokenSecret, { expiresIn: config.refreshTokenLife})
         const response = {
             "status": "Logged in",
             "token": token,
@@ -171,15 +175,24 @@ const login = async (req,res) => {
 
 const freshToken = async (req,res) => {
     const {refreshToken, ...data} = req.body
-    console.log(tokenList,"token list")
+    // console.log(tokenList,"token list")
+    // console.log({...data})
     if((refreshToken) && (refreshToken in tokenList)) {
-        const token = jwt.sign({...data}, config.secret, { expiresIn: config.tokenLife})
-        const response = {
-            "token": token,
-        }
-        // update the token in the list
-        tokenList[refreshToken].token = token
-        res.status(200).json(response);        
+        jwt.verify(refreshToken, config.refreshTokenSecret, function(err) {
+            if (err) {
+                console.log(err,"habis waktu")
+                return res.status(403).json({"error": true, "message": 'Forbidden access.' });
+            }else{
+                console.log("masih ada waktu")
+                const token = jwt.sign({...data}, config.secret, { expiresIn: config.tokenLife})
+                const response = {
+                    "token": token,
+                }
+                // update the token in the list
+                tokenList[refreshToken].token = token
+                res.status(200).json(response);        
+            }
+        });
     } else {
         res.status(404).send('Invalid request')
     }
