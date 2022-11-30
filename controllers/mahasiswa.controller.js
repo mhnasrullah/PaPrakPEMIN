@@ -38,10 +38,14 @@ const byNim = async (req, res) => {
     } = req.params;
 
     const data = await Mahasiswa.findByPk(nim,{
-        include : {
-            model : Prodi,
-            attributes : ['nama']
-        }
+        include : [
+            {
+                model : Prodi,
+                attributes : ['nama']},
+            {
+                model: Matakuliah,
+                attributes:['nama']
+            }]
     });
 
     if (data === null) {
