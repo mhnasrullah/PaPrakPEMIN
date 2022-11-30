@@ -6,7 +6,7 @@ const {
 } = require("../models")
 
 const get = async (req, res) => {
-    const attributes = ['nim', 'nama', 'angkatan']
+    const attributes = ['nim', 'nama', 'angkatan','prodi']
     const data = await Mahasiswa.findAll({
         attributes,
         include: [{model: Prodi, attributes:['nama']}, {model: Matakuliah, attributes:['nama'], exclude:['Mahasiswa_matakuliah']}],
