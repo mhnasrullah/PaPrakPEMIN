@@ -162,7 +162,7 @@ const login = async (req,res) => {
         
         tokenList[refreshToken] = response
         res.json({
-            message : response
+            data : response
         })
     }else{
         res.status(404).json({

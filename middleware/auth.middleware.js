@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const config = require("../config/jwt.config")
 
 function authenticateToken(req, res, next) {
-    const token = req.body.token || req.query.token || req.headers['x-access-token']
+    const token = req.body.token || req.query.token || req.headers['x-access-token'] || req.headers['token']
     // decode token
     if (token) {
       // verifies secret and checks exp
