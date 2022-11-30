@@ -26,6 +26,7 @@ const get = async (req, res) => {
 }
 
 const profile = async (req, res) => {
+    
     res.json({
         message: "profile mahasiswa"
     })
