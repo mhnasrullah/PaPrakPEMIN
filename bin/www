@@ -7,7 +7,8 @@
 var app = require('../app');
 var debug = require('debug')('bepapemin:server');
 var http = require('http');
-
+var ENV = require("dotenv");
+ENV.config()
 
 /**
  * Get port from environment and store in Express.
