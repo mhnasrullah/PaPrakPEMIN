@@ -79,14 +79,39 @@ const addMk = async (req, res) => {
         mkId
     } = req.params
 
-    const data = await Mahasiswa_matakuliah.create({
-        mhsNim: nim,
-        mkId: mkId
+    let error = [];
+
+    const exist = await Mahasiswa_matakuliah.findOne({
+        where : {
+            mhsNim: nim,
+            mkId: mkId
+        }
     })
-    res.json({
-        message: `add mk ${mkId} on mahasiswa ${nim}`,
-        data
-    })
+
+    // VALIDATION
+    if(exist != null){
+        error = [
+            ...error,
+            "Matakuliah sudah dipilih"
+        ]
+    }
+
+    if(error.length == 0){
+        const {dataValues} = await Mahasiswa_matakuliah.create({
+            mhsNim: nim,
+            mkId: mkId
+        });
+        // console.log(data,"data response");
+        res.status(200).json({
+            message: `add mk ${mkId} on mahasiswa ${nim}`,
+            data : dataValues
+        })
+    }else{
+        res.status(404).json({
+            message: `add mk ${mkId} on mahasiswa ${nim}`,
+            error
+        })
+    }
 }
 
 const changeMk = async (req, res) => {
