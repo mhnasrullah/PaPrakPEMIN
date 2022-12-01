@@ -1,10 +1,10 @@
 const {Prodi} = require("../models")
 
 const get = async (req,res) => {
-    const data = await Prodi.findAll();
+    const prodi = await Prodi.findAll();
     res.status(200).json({
         message : "get all prodi",
-        data
+        prodi
     })
 }
 

@@ -6,29 +6,37 @@ const {
 } = require("../models")
 
 const get = async (req, res) => {
-    const attributes = ['nim', 'nama', 'angkatan','prodi']
-    const data = await Mahasiswa.findAll({
+    const attributes = ['nim', 'nama', 'angkatan']
+    const mahasiswa = await Mahasiswa.findAll({
         attributes,
-        include: [{model: Prodi, attributes:['nama']}, {model: Matakuliah, attributes:['nama'], exclude:['Mahasiswa_matakuliah']}],
+        include: [{
+            model: Prodi,
+            attributes: ['nama']
+        }, {
+            model: Matakuliah,
+            attributes: ['nama', 'id']
+        }],
+        exclude: ['prodi']
     });
 
-    if (data.length != 0) {
+    if (mahasiswa.length != 0) {
         res.status(200).json({
             message: "semua mahasiswa",
-            data
+            mahasiswa
         })
     } else {
         res.status(404).json({
             message: "data mahasiswa tidak tersedia",
-            data
+            mahasiswa
         })
     }
 }
 
 const profile = async (req, res) => {
-    
+    // console.log(req.headers)
+    const mahasiswa = await Mahasiswa.findByPk(req.decoded.nim)
     res.json({
-        message: "profile mahasiswa"
+       mahasiswa
     })
 }
 
@@ -37,14 +45,17 @@ const byNim = async (req, res) => {
         nim
     } = req.params;
 
-    const data = await Mahasiswa.findByPk(nim,{
-        include : {
-            model : Prodi,
-            attributes : ['nama']
-        }
+    const mahasiswa = await Mahasiswa.findByPk(nim, {
+        include: [{
+            model: Prodi,
+            attributes: ['nama']
+        }, {
+            model: Matakuliah,
+            attributes: ['nama', 'id']
+        }]
     });
 
-    if (data === null) {
+    if (mahasiswa === null) {
         res.status(404).json({
             message: `Mahasiswa ${nim} not found`
         });
@@ -54,10 +65,10 @@ const byNim = async (req, res) => {
                 password,
                 ...dataMahasiswa
             }
-        } = data;
+        } = mahasiswa;
         res.status(200).json({
             message: `Mahasiswa ${nim} found`,
-            data: dataMahasiswa
+            mahasiswa: dataMahasiswa
         });
     }
 }
@@ -68,8 +79,13 @@ const addMk = async (req, res) => {
         mkId
     } = req.params
 
+    const data = await Mahasiswa_matakuliah.create({
+        mhsNim: nim,
+        mkId: mkId
+    })
     res.json({
-        message: `add mk ${mkId} on mahasiswa ${nim}`
+        message: `add mk ${mkId} on mahasiswa ${nim}`,
+        data
     })
 }
 
@@ -78,12 +94,14 @@ const changeMk = async (req, res) => {
         nim,
         mkId
     } = req.params
-    const data = await Mahasiswa_matakuliah.create({
-        mahasiswaNim: nim,
-        matakuliahId: mkId
+    const data = await Mahasiswa_matakuliah.destroy({
+        where: {
+            mhsNim: nim,
+             mkId: mkId
+        } 
     })
     res.json({
-        message: `add mk ${mkId} on mahasiswa ${nim}`,
+        message: `Delete mk ${mkId} on mahasiswa ${nim}`,
         data
     })
 }

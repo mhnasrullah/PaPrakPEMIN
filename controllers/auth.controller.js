@@ -161,9 +161,7 @@ const login = async (req,res) => {
         }
         
         tokenList[refreshToken] = response
-        res.json({
-            data : response
-        })
+        res.json(response)
     }else{
         res.status(404).json({
             message : "logged in failed",

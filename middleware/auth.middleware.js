@@ -4,6 +4,7 @@ const config = require("../config/jwt.config")
 function authenticateToken(req, res, next) {
     const token = req.body.token || req.query.token || req.headers['x-access-token'] || req.headers['token']
     // decode token
+  console.log('token fron auth: '+token)
     if (token) {
       // verifies secret and checks exp
       jwt.verify(token, config.secret, function(err, decoded) {

@@ -3,14 +3,14 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Mahasiswa_matakuliahs', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
+      // id: {
+      //   allowNull: false,
+      //   autoIncrement: true,
+      //   primaryKey: true,
+      //   type: Sequelize.INTEGER
+      // },
+      mhsNim: {
         primaryKey: true,
-        type: Sequelize.INTEGER
-      },
-      mahasiswaNim: {
-        // primaryKey: true,
         allowNull:false,
         type: Sequelize.STRING,
         references: {
@@ -18,8 +18,8 @@ module.exports = {
           key:'nim',
         }
       },
-      matakuliahId: {
-        // primaryKey: true,
+      mkId: {
+        primaryKey: true,
         allowNull:false,
         type: Sequelize.INTEGER,
         references: {

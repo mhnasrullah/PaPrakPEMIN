@@ -11,11 +11,22 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      models.Matakuliah.belongsToMany(models.Mahasiswa, {
+        through: 'Mahasiswa_matakuliah',
+        foreignKey: 'mkId'
+      })
+      models.Mahasiswa.belongsToMany(models.Matakuliah, {
+        through: 'Mahasiswa_matakuliah',
+        foreignKey: 'mhsNim'
+      })
+      models.Matakuliah.sync()
+      models.Mahasiswa.sync()
+      models.Mahasiswa_matakuliah.sync()
     }
   }
   Mahasiswa_matakuliah.init({
-    mahasiswaNim: DataTypes.INTEGER,
-    matakuliahId: DataTypes.INTEGER
+    mhsNim: DataTypes.INTEGER,
+    mkId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Mahasiswa_matakuliah',
